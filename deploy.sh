@@ -1,7 +1,7 @@
 #!/bin/sh
 
 source ./containers
-source ./host
+source ./hosts
 
 for host in $HOSTS
 do
