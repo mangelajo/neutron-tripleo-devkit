@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source images
+source containers 
 
 set -x
 set -e
