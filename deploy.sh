@@ -1,6 +1,6 @@
 #!/bin/sh
 
-source ./images
+source ./containers
 source ./host
 
 for host in $HOSTS
