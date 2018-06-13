@@ -1,0 +1,7 @@
+
+IMAGES="centos-binary-neutron-l3-agent centos-binary-neutron-dhcp-agent "
+IMAGES="$IMAGES centos-binary-neutron-server centos-binary-neutron-metadata-agent "
+IMAGES="$IMAGES centos-binary-neutron-openvswitch-agent"
+
+CONTAINERS="neutron_l3_agent neutron_dhcp neutron_api neutron_metadata_agent "
+CONTAINERS="$CONTAINERS neutron_ovs_agent"

@@ -1,0 +1,7 @@
+FROM 192.168.24.1:8787/tripleomaster/IMAGENAME:current-tripleo 
+MAINTAINER Neutron-devel
+USER root
+COPY neutron /tmp/neutron
+WORKDIR /tmp/neutron
+RUN python setup.py install
+USER neutron
