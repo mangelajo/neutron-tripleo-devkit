@@ -1,4 +1,4 @@
-FROM 192.168.24.1:8787/tripleomaster/IMAGENAME:current-tripleo 
+FROM {{ src_registry }}/{{ item.value.image }}:{{ tag }}
 MAINTAINER Neutron-devel
 USER root
 COPY neutron /tmp/neutron

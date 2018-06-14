@@ -1,0 +1,21 @@
+containers:
+  l3:
+    docker: neutron_l3_agent
+    image: centos-binary-neutron-l3-agent
+  dhcp:
+    docker: neutron_dhcp
+    image: centos-binary-neutron-dhcp-agent
+  server:
+    docker: neutron_api
+    image: centos-binary-neutron-server
+  metadata:
+    docker: neutron_metadata_agent
+    image: centos-binary-neutron-metadata-agent
+  ovs:
+    docker: neutron_ovs_agent
+    image: centos-binary-neutron-openvswitch-agent
+
+
+src_registry: docker.io/tripleomaster
+registry: 192.168.24.1:8787/tripleomaster
+tag: current-tripleo
