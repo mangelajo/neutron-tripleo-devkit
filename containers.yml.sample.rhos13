@@ -1,0 +1,19 @@
+deployment_hosts: Controller, Compute
+
+repos:
+  - neutron
+  - networking-ovn
+
+containers:
+  server:
+    docker: neutron_api
+    image: openstack-neutron-server-ovn 
+    repos:
+       - neutron
+       - networking-ovn
+    user: neutron
+
+src_registry: registry.access.redhat.com/rhosp13 
+registry: 192.168.24.1:8787/rhosp13
+src_tag: 13.0-36
+tag: 2018-06-20.1 

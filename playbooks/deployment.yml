@@ -1,13 +1,12 @@
 ---
 
-- hosts: controllers 
-  vars:
-    containers_dict: "{{ lookup('dict', containers) }}"
+- hosts: "{{ deployment_hosts }}"
   tasks:
     - name: "Pull containers from registry"
       shell: |
         docker pull {{ registry }}/{{ item.value.image }}:{{ tag }}
-      loop: "{{ containers_dict }}"
+      with_dict: "{{ containers }}"
+      become: true
 
     - name: "Update running containers"
       shell: |
@@ -16,11 +15,13 @@
             sudo docker stop $ID
             sudo docker rm $ID
           done
-      loop: "{{ containers_dict }}"
+      with_dict: "{{ containers }}"
+      become: true
 
     - name: "Start the containers again with the new images"
       shell: |
         paunch --verbose apply \
                --file /var/lib/tripleo-config/hashed-docker-container-startup-config-step_4.json \
                --config-id tripleo_step4
+      become: true
 

@@ -27,12 +27,6 @@ LANG=C
 : ${OVERCLOUDRC_FILE:=~/overcloudrc}
 
 check_for_necessary_files() {
-    if [ ! -e inventory ]
-    then
-        echo "ansible inventory file not present"
-        echo "Please run $0 generate-inventory"
-        exit 1
-    fi
 
     if [ ! -e containers.yml ]
     then
@@ -46,40 +40,10 @@ check_for_necessary_files() {
     fi
 }
 
-# Generate the inventory file for ansible playbooks.
-generate_ansible_inventory_file() {
-    echo "Generating the inventory file for ansible-playbook"
-    source $STACKRC_FILE
-    echo "[controllers]"  > inventory
-    CONTROLLERS=`openstack server list -c Name -c Networks | grep controller | awk  '{ split($4, net, "="); print net[2] }'`
-    for node_ip in $CONTROLLERS
-    do
-        echo $node_ip ansible_ssh_user=heat-admin ansible_become=true >> inventory
-    done
-
-    echo "" >> inventory
-    echo "[computes]" >> inventory
-    for node_ip in `openstack server list -c Name -c Networks | grep compute | awk  '{ split($4, net, "="); print net[2] }'`
-    do
-        echo $node_ip ansible_ssh_user=heat-admin ansible_become=true >> inventory
-    done
-
-    echo "" >> inventory
-
-    echo "[undercloud]" >> inventory
-    echo "localhost ansible_connection=local" >> inventory
-    echo "" >> inventory
-
-    echo "***************************************"
-    cat inventory
-    echo "***************************************"
-    echo "Generated the inventory file - inventory"
-}
-
 prep_images() {
     source $STACKRC_FILE
     echo "Preparing images"
-    ansible-playbook  ./playbooks/prep-images.yml \
+    ansible-playbook  -i /usr/bin/tripleo-ansible-inventory ./playbooks/prep-images.yml \
     	              -e @containers.yml $*
 
     rc=$?
@@ -88,8 +52,8 @@ prep_images() {
 start_deployment() {
     source $STACKRC_FILE
     echo "Starting the deployment"
-    ansible-playbook  ./playbooks/deployment.yml \
-    		      -e @containers.yml -i inventory $*
+    ansible-playbook  -i /usr/bin/tripleo-ansible-inventory ./playbooks/deployment.yml \
+    		      -e @containers.yml $*
 
     rc=$?
     return $rc

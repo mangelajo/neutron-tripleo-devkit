@@ -1,7 +1,12 @@
-FROM {{ src_registry }}/{{ item.value.image }}:{{ tag }}
+FROM {{ src_registry }}/{{ item.value.image }}:{{ src_tag }}
 MAINTAINER Neutron-devel
 USER root
-COPY neutron /tmp/neutron
-WORKDIR /tmp/neutron
+
+{% for repos in item.value.repos %}
+  COPY {{ repos }} /tmp/{{ repos }}
+  WORKDIR /tmp/{{ repos }}
+{% endfor %}
+
 RUN python setup.py install
-USER neutron
+USER {{ item.value.user }} 
+

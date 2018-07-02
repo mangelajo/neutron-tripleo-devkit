@@ -1,22 +1,21 @@
 ---
 
 - hosts: localhost
-  vars:
-    containers_dict: "{{ lookup('dict', containers) }}"
   tasks:
     - name: Creates directory
       file: path=/tmp/dockerbuild state=directory
 
     - name: "Synchronize sources to dockerbuild directory"
       synchronize:
-        src: ../neutron
+        src: "../{{ item }}"
         dest: /tmp/dockerbuild/
+      with_items: "{{ repos }}"
 
     - name: "Write Dockerfile"
       template:
         src: Dockerfile.j2
         dest: "/tmp/dockerbuild/Dockerfile.{{ item.key }}"
-      loop: "{{ containers_dict }}" 
+      with_dict: "{{ containers }}"
 
     - name: "Build docker container"
       shell: |
@@ -25,11 +24,11 @@
                -f Dockerfile.{{ item.key }} \
                -t {{ registry }}/{{ item.value.image }}:{{ tag }} \
                . 2>&1 >build.{{ item.key }}.log
-      loop: "{{ containers_dict }}"
+      with_dict: "{{ containers }}"
 
     - name: "Push containers to registry"
       shell: |
         docker push {{ registry }}/{{ item.value.image }}:{{ tag }}
         docker image rm {{ registry }}/{{ item.value.image }}:{{ tag }}
-      loop: "{{ containers_dict }}"
+      with_dict: "{{ containers }}"
 

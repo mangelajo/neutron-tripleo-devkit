@@ -8,12 +8,13 @@ cd neutron-tripleo-devkit
 git clone https://github.com/openstack/neutron
 ```
 
-Prepare the inventory and initial containers.yml file:
+feel free to edit the containers.yml to suit your needs
 ```bash
-./devkit.sh generate-inventory
+cp containers.yml.sample containers.yml
+vi containers.yml
 ```
 
-feel free to edit the containers.yml to suit your needs
+## Build the images
 
 ```bash
 ./devkit.sh prep-images
@@ -22,6 +23,7 @@ feel free to edit the containers.yml to suit your needs
 That command will take the existing images and install neutron
 from sources on top, then push them back to the registry, one by one.
 
+## Deploy the images to the hosts
 
 ```bash
 ./devkit.sh deploy
